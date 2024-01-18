@@ -1,7 +1,7 @@
 # ProjectTillit
 Migration between Databases
 ***************************
-REACT APPLICATIE:
+REACT APPLICATIE (datastream directory):
 Starten -> npm run start-dev
 Server express en React.js draaien op twee verschillende ports.
 Om in te loggen: E-mail & Wachtwoord: admin.
