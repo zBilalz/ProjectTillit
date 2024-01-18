@@ -1,0 +1,49 @@
+.applicationIconContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f6f0fb;
+    flex-wrap: wrap;
+    height: auto;
+    overflow: hidden;
+  }
+  
+  .applicationIcon {
+    text-align: center;
+    font-weight: 700;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    margin: 30px;
+    padding: 20px;
+    width: 50px;
+    background-color: #ffcc80;
+    border-radius: 10px;
+    cursor: pointer;
+    color:black;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+    transition: background-color 0.3s ease-in;
+    flex: 0 0 calc(33.33% - 60px);
+  }
+  
+  .applicationIcon:hover {
+    background-color: #2980b9;
+  }
+  
+  .applicationIcon img {
+    width: 80px;
+    height: auto;
+    border-radius: 8px;
+  }
+  
+  .applicationIcon p {
+    margin-top: 10px;
+    font-size: 17px;
+    color: #333333;
+    
+  }
+  
+.applicationLogoutIcon {
+    cursor: pointer;
+    color:white;
+    font-size: 70px; 
+  }

@@ -1,0 +1,72 @@
+.navbar {
+  width: 100%;
+  padding: 20px 20px 20px 10px; 
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid #18145c; 
+  background-color: white;
+  color: #18145c;
+}
+
+
+.navbar .logo {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  gap: 10px;
+  margin-left: 60px;
+  width: 90px; 
+  height: auto;
+}
+
+
+.profilePic {
+  cursor: pointer;
+  width: 40px; 
+  height: 40px; 
+  border-radius: 50%; 
+}
+
+
+.navbar .icons {
+  display: flex;
+  align-items: center;
+  gap: 25px; 
+}
+
+
+.navbar .icons .user {
+  display: flex;
+  align-items: center;
+  gap: 15px; 
+}
+
+.navbar .icons .user img {
+  width: 40px; 
+  height: 40px; 
+  border-radius: 50%; 
+  object-fit: cover; 
+}
+
+
+.logoutIcon {
+  cursor: pointer;
+  font-size: 24px; 
+}
+
+.profilePic:hover,.logoutIcon:hover {
+  color: #5090d3; 
+  cursor: pointer; 
+  transform: scale(1.30); 
+  transition: color 0.3s ease, transform 0.3s ease; 
+}
+.logo:hover{
+  cursor: pointer; 
+  transform: scale(1.1); 
+  transition: color 0.3s ease, transform 0.3s ease; 
+}
+.profilePic,.logoutIcon,.logo {
+  transform: scale(1); 
+  transition: color 0.3s ease, transform 0.3s ease; 
+}

@@ -1,0 +1,177 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.accountDetails {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.accountProfileCard {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.accountAvatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.accountDetails, .accountModalChildItems {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+
+.accountDetailItem {
+  display: flex;
+  
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.accountDetailItem span:last-child {
+  margin-left: 5px;
+}
+
+.accountLabel {
+  font-weight: bold;
+}
+
+.addDatabaseBtn, .updateBtn {
+  background-color: orange;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 20px;
+  margin-top: 20px;
+  transition: background-color 0.3s ease-in;
+}
+
+.addDatabaseBtn:hover, .updateBtn:hover {
+  background-color: #2980b9;
+}
+
+.accountModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: appear 0.5s ease-in-out forwards;
+}
+
+.accountModalContent {
+  width: 600px;
+  position: relative;
+  background: #fff;
+  padding: 2em;
+  border-radius: 20px;
+  animation: modalEnter 0.5s ease-in-out forwards;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.accountCloseBtn {
+color: #aaa;
+line-height: 50px;
+font-size: 25px;
+position: absolute;
+right: 0;
+top: 0;
+cursor: pointer;
+text-align: center;
+width: 70px;
+text-decoration: none;
+}
+
+.accountCloseBtn:hover {
+color: black;
+}
+
+.accountModalDatabaseList {
+max-height: 300px;
+overflow-y: auto;
+padding: 20px;
+}
+
+.accountModalDatabaseList h2 {
+font-size: 1.5rem;
+color: #333;
+margin-bottom: 15px;
+}
+
+.accountModalDatabaseList ul {
+list-style: none;
+padding: 0;
+margin: 0;
+}
+
+.accountModalDatabaseList li {
+padding: 15px;
+margin-bottom: 10px;
+background-color: #f8f8f8;
+border-radius: 8px;
+transition: background-color 0.3s ease-in-out;
+display: flex;
+justify-content: space-between;
+align-items: center;
+font-size: 1.2rem;
+color: #333;
+flex: 2;
+font-size: 25px;
+}
+
+.accountModalDatabaseList li:hover {
+background-color: #e2e2e2;
+}
+
+@keyframes appear {
+0% {
+opacity: 0;
+transform: translateY(-20px);
+}
+100% {
+opacity: 1;
+transform: translateY(0);
+}
+}
+
+@keyframes modalEnter {
+from {
+transform: translateY(-50px);
+}
+to {
+transform: translateY(0);
+}
+}

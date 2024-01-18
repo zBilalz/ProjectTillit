@@ -1,0 +1,74 @@
+@import "./variables.css";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+
+
+.main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: 'Nunito', sans-serif;
+
+  color: white;
+}
+
+.container {
+  flex: 1; 
+  display: flex;
+
+}
+
+.menuContainer {
+  width: 250px;
+  padding: 5px 20px;
+  border-right: 2px solid #ddd;
+  background-color: #18145c;
+}
+
+.contentContainer {
+  padding: 5px 20px;
+  width: 100%;
+  background-color: #f6f0fb;
+  color: black;
+  
+  max-height: max-content;
+
+}
+.footer {
+ 
+  display: flex;
+  align-items: center;
+  background-color: #18145c;
+  padding: 30px;
+  border-top: 2px solid white;
+  
+}
+
+.footer span:first-child {
+  font-weight: bold;
+}
+
+.footer span:last-child {
+  font-size: 14px;
+}
+
+.footerstyle{ 
+  font-weight: bold;
+  text-shadow: 2px 2px black;
+}
