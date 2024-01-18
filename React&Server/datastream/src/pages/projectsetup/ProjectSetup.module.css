@@ -1,0 +1,193 @@
+.projectSetup {
+  display: grid;
+  gap: 20px;
+  width: 100%;
+  height: 100%;
+  max-height: max-content;
+  grid-template-areas: "box1 box2 box2 box2";
+  grid-template-columns: repeat(4, 1fr);
+
+
+}
+
+.projectSetupBox1 {
+  padding: 10px 20px 100px 20px;
+  border-radius: 10px;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  background-color: white;
+  grid-area: box1;
+}
+
+.projectSetupBox1 > div > div > p{
+  font-size: 22px !important;
+ 
+}
+
+.projectSetupBox2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  text-align: center;
+  background-color: white;
+  grid-area: box2;
+}
+
+.projectSetupDropdownContainer {
+  position: relative;
+}
+
+.projectSetupSourceSelect {
+  width: 100%;
+  padding: 5px;
+  border: 2px solid grey;
+  background: white;
+  font-size: 20px;
+}
+
+.projectSetupSourceSelect option:disabled {
+  color: #888;
+}
+
+.projectSetupSourceSelect option:checked {
+  background-color: #0b5786;
+  color: white;
+}
+
+.projectSetupAddButton {
+  margin-left: 5px;
+  padding: 7px;
+}
+
+
+.buttonMigrationEnabled {
+  background-color: orange;
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.3s ease-in;
+}
+
+.buttonMigrationDisabled {
+  color: #c0c0c0;
+  background-color: #ffffff;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: not-allowed
+  
+}
+
+.buttonMigrationEnabled:hover {
+  background-color: #0056b3;
+}
+
+.statusMessage {
+  color: #155724;
+  font-size: 24px;
+}
+
+.projectSetupSourceSelect {
+  width: 100%; 
+  height: 50px; 
+  
+  padding: 5px 10px;
+  border: 1px solid #ccc; 
+  border-radius: 4px; 
+  background-color: white; 
+  font-size: 16px; 
+  color: #333; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+  cursor: pointer; 
+}
+
+.projectSetupSourceBox img{
+    margin-top: 15px;
+}
+
+.projectSetupSourceSelect p {
+  font-size: 40px;
+}
+
+.projectSetupSourceSelect:focus {
+  outline: none; 
+  border-color: #007bff; 
+}
+
+
+
+.projectSetupSourceSelect option {
+  padding: 5px; 
+  background-color: white; 
+}
+.migrate{
+  
+  font-size: 30px;
+}
+
+.migrationModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.migrationModal {
+  background: #fff;
+  
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  animation: fadeIn 0.5s;
+  position: relative;
+}
+
+.migrationModalHeader {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.migrationCloseButton {
+  color: #6c6c6c;
+line-height: 50px;
+font-size: 25px;
+position: absolute;
+right: 0;
+top: 0;
+cursor: pointer;
+text-align: center;
+width: 70px;
+text-decoration: none;
+}
+
+.migrationCloseButton:hover {
+  color:black;
+}
+
+.migrationModalContent {
+  line-height: 1.5;
+  color: rgb(40, 67, 0);;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
