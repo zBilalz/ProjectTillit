@@ -61,8 +61,8 @@ const ProcessOverview = () => {
           {userData.map((item:any, index:any) => (
             <tr key={index} className={styles.historyListItem}>
               <td>{index + 1}</td>
-              <td>{format(item.startedAt, "dd-mm-yy HH:mm:ss")}</td>
-              <td>{format(item.endedAt, "dd-mm-yy HH:mm:ss")}</td>
+              <td>{format(item.startedAt, "dd-MM-yy HH:mm:ss")}</td>
+              <td>{format(item.endedAt, "dd-MM-yy HH:mm:ss")}</td>
               <td>{item.sourceDb}</td>
               <td>{item.destinationDb}</td>
             </tr>
