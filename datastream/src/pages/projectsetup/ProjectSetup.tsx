@@ -16,6 +16,7 @@ const ProjectSetup = () => {
   const [sqlTables, setSqlTables] = useState<string[]>([]);
   const [sqlTablesFetching, setSqlTablesFetching] = useState(false);
   const [errorServer, setErrorServer] = useState(false);
+  const [errorSqlFetching, setErrorSqlFetching] = useState(false);
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -62,6 +63,7 @@ const ProjectSetup = () => {
             }
         } catch (error) {
           setErrorServer(true);
+          setErrorSqlFetching(true);
         }
       
       }
@@ -110,6 +112,7 @@ const ProjectSetup = () => {
   const closeModal = () => {
     setMigrationDone(false);
     setErrorServer(false);
+    setErrorSqlFetching(false);
   };
   return (
     <>
@@ -192,7 +195,7 @@ const ProjectSetup = () => {
                 &times;
               </span>
             <div className={styles.migrationModalContent}>
-              {migrationDone ? <p>Your migration has been completed successfully!</p> :<p>Something went wrong with the server. Try again later</p> }
+              {migrationDone ? <p>Your migration has been completed successfully!</p> : errorSqlFetching && errorServer ? <p>The server could not fetch the SQL tables.</p> : <p>Something went wrong with the server or the API is offline. Try again later.</p> }
             </div>
           </div>
         </div>

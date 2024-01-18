@@ -108,7 +108,6 @@ import ApplicationManagement from './pages/applicationManagement/applicationMana
             <Menu />
           </div>
           <div className='contentContainer'>
-         
          < Outlet/>
           </div>
     
