@@ -11,7 +11,7 @@ const Unauthorized = () => {
           <div className={styles.unauthorizedContainer}>
       <h1 className={styles.unauthorizedTitle}>Access Denied</h1>
       <p className={styles.unauthorizedMessage}>
-        Sorry, you don't have permission to access this page. Go back to {<Link style={{float:"none", color:"green"}} to={token == undefined ? "/account/login" :"/"}>{token == undefined ? "Login" :"Home"}</Link>}
+        Sorry, you don't have permission to access this page. Go back to {<Link style={{float:"none", color:"grey"}} to={token == undefined ? "/account/login" :"/"}>{token == undefined ? "Login" :"Home"}</Link>}
       </p>
     
    

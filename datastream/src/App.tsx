@@ -20,6 +20,7 @@ import Unauthorized from './pages/unauthorized/Unauthorized';
 import MyAccount from './pages/account/MyAccount';
 import ProcessOverview from './pages/processOverview/ProcessOverview';
 import ApplicationManagement from './pages/applicationManagement/applicationManagement';
+import PageNotFound from './pages/pageNotFound/PageNotFound';
 
 
 
@@ -169,6 +170,10 @@ import ApplicationManagement from './pages/applicationManagement/applicationMana
       path: '/unauthorized',
       element: <Unauthorized />,
     },
+    {
+      path: "*",
+      element: <PageNotFound/>
+  }
   ]);
 
 
