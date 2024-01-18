@@ -1,6 +1,10 @@
 # ProjectTillit
 Migration between Databases
 ***************************
+Gebruikte versies:
+ts-node: 10.9.1
+node.js: 20.11.0
+***************************
 REACT APPLICATIE (datastream directory):
 Starten -> npm run start-dev
 Server express en React.js draaien op twee verschillende ports.
