@@ -3,7 +3,7 @@ import { Mongoose, Schema, InferSchemaType } from 'mongoose';
 import user from "../src/interfaces/schemas/user"
 import  MigrationHistory  from "../src/interfaces/schemas/migrationHistory"
 const mongoose = new Mongoose();
-mongoose.connect("mongodb+srv://s122572:Student@cluster0.kxgul8a.mongodb.net/Login?retryWrites=true&w=majority")
+mongoose.connect("mongodb+srv://s122572:Student@cluster0.kxgul8a.mongodb.net/Datashift?retryWrites=true&w=majority")
 .then(()=>{
     console.log("mongodb connected");
 })
