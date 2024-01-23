@@ -3,6 +3,7 @@ import styles from './ProjectSetup.module.css';
 import axios from 'axios';
 import LoadingSpinner from '../../components/Indicators/loadingSpinner';
 import LoadingTextMigration from '../../components/Indicators/loadingText';
+import DbLink from '../../interfaces/schemas/dbLink';
 
 const ProjectSetup = () => {
   const [selectedSource, setSelectedSource] = useState<string | null>(null);
@@ -10,7 +11,7 @@ const ProjectSetup = () => {
   const [loading, setLoading] = useState(false);
   const [fetchDone, setIsFetchDone] = useState(false);
   const [migrationDone, setMigrationDone] = useState(false);
-  const [databaseNames, setDatabaseNames] = useState<string[]>([])
+  const [dbConnections, setDbConnections] = useState<DbLink>({})
   const [isDatabaseEmpty, setIsDatabaseEmpty] = useState(false);
   const [selectedDBIsEmpty, setSelectedDBIsEmpty] = useState(false);
   const [sqlTables, setSqlTables] = useState<string[]>([]);
@@ -28,8 +29,9 @@ const ProjectSetup = () => {
          await axios.get("http://localhost:8000/fetchUser", {
           headers: { Authorization: token}, 
           params: { requests: ["databases"] },
-        }).then((response) => {setDatabaseNames([...response.data.databaseNames]);
-         setIsDatabaseEmpty(response.data.databaseNames.length < 1); console.log(response.data.databaseNames);
+        }).then((response) => {setDbConnections(response.data.databaseConnections);
+         setIsDatabaseEmpty(Object.keys(response.data.databaseConnections).length < 1);
+         
          }).finally(() => setIsFetchDone(true));
         
         
@@ -50,12 +52,13 @@ const ProjectSetup = () => {
   }, [])
 
   useEffect(() => {
-
-    if (selectedSource == "sql"){
+    const [connectionNameSource, dbTypeSource] = selectedSource?.split(',') ?? [""];
+    
+    if (dbTypeSource == "sql"){
       setSqlTablesFetching(true);
       const fetchSqlTables = async () => {
         try {
-          const response = await axios.get(`http://localhost:8000/database/sqlTables`, {
+          const response = await axios.get(`http://localhost:8000/database/sqlTables?connectionName=${connectionNameSource}`, {
             headers: { Authorization: token}
           }).then().catch().finally(() => setSqlTablesFetching(false));
             if (response.data.tables != undefined) {
@@ -64,6 +67,7 @@ const ProjectSetup = () => {
         } catch (error) {
           setErrorServer(true);
           setErrorSqlFetching(true);
+          setSqlTables([]);
         }
       
       }
@@ -86,11 +90,12 @@ const ProjectSetup = () => {
     setLoading(true);
     setSelectedDBIsEmpty(false)
     try {
+      const [connectionNameSource, dbTypeNameSource] = selectedSource?.split(',') ?? [""];
+      const [connectionNameDestination, dbTypeNameDestination] = selectedDestination?.split(',') ?? [""];
 
-      const response = await axios.get(`http://localhost:8000/database/transfer?srcDB=${selectedSource}&dstDB=${selectedDestination}`, {
+      const response = await axios.get(`http://localhost:8000/database/transfer?srcDbTypeName=${dbTypeNameSource}&srcConName=${connectionNameSource}&dstDbTypeName=${dbTypeNameDestination}&dstConName=${connectionNameDestination}`, {
         headers: { Authorization: token}
       }).then().catch().finally(() => setLoading(false));
-        console.log(response.status);
         
       if (response.status == 200) {
         setMigrationDone(true);
@@ -133,7 +138,7 @@ const ProjectSetup = () => {
                 Select a source
               </option>
               }
-             {isDatabaseEmpty ? "" : databaseNames.map((dbName) => <option key={dbName} value={dbName} disabled={loading}>{dbName}</option>) }
+             {isDatabaseEmpty ? "" : Object.keys(dbConnections).map((dbTypeName) => Object.keys(dbConnections[dbTypeName]).map((connectionName) =>  <option key={connectionName} value={`${connectionName},${dbTypeName}`} disabled={loading}>{connectionName} ({dbTypeName}:{dbConnections[dbTypeName][connectionName].server})</option>) ) }
             </select>
 
             {sqlTablesFetching ? <LoadingSpinner /> : sqlTables.length > 0 ?
@@ -164,7 +169,7 @@ const ProjectSetup = () => {
                 Select a destination
               </option>
               }
-             {isDatabaseEmpty ? "" : databaseNames.map((dbName) => <option key={dbName} value={dbName} disabled={loading}>{dbName}</option>) }
+             {isDatabaseEmpty ? "" : Object.keys(dbConnections).map((dbTypeName) => Object.keys(dbConnections[dbTypeName]).map((connectionName) =>  <option key={connectionName} value={`${connectionName},${dbTypeName}`} disabled={loading}>{connectionName} ({dbTypeName}:{dbConnections[dbTypeName][connectionName].server})</option>) ) }
             </select>
             <br />
           <br />

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DatashiftAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b9ab96ba6ef6d524e8c54a391aeb5ce9c579075c")]
 [assembly: System.Reflection.AssemblyProductAttribute("DatashiftAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DatashiftAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

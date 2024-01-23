@@ -1,4 +1,5 @@
-﻿using MySql.Data.MySqlClient;
+﻿using MongoDB.Driver.Core.Configuration;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 
@@ -107,9 +108,12 @@ namespace DatashiftAPI.Services
             ICollection<string> databaseNames = data.Keys;
             foreach (var databaseName in databaseNames)
             {
-                var index = 0;
-                using (var destinationConnection = new MySqlConnection(destinationConnectionString.Replace(index == 0 ? databaseNames.ElementAt(0) 
-                    : databaseNames.ElementAt(index - 1), databaseName)))
+                int dbIndex = destinationConnectionString.IndexOf("Database=");
+                string dbSubString = destinationConnectionString.Substring(dbIndex + "Database=".Length);
+                int indexPuntComma = dbSubString.IndexOf(';');
+                string dbNameToBeChanged = dbSubString.Substring(0, indexPuntComma);
+
+                using (var destinationConnection = new MySqlConnection(destinationConnectionString.Replace(dbNameToBeChanged, databaseName)))
             {
                 destinationConnection.Open();
 
@@ -121,7 +125,7 @@ namespace DatashiftAPI.Services
                     }
                
             }
-                index++;
+        
             }
         }
 

@@ -83,16 +83,45 @@ app.post("/register",cors(),async(req:any,res:any)=>{
 })
 
 app.post("/updateDbLinks", cors(),async(req:any,res:any) => {
-  const{dbName,sourceLink,destinationLink}=req.body;
+  const{connectionName,dbTypeName,connectionLink}=req.body;
+  let server="";
+  const token = req.header('Authorization');
+  
+  if (!token) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+  if (dbTypeName == "mongodb") {
+    server = connectionLink as string;
+    server = server.substring(server.indexOf("/")+2,server.indexOf(":", server.indexOf("/")+2))
+
+  }
+  if (dbTypeName == "sql") {
+    server = connectionLink as string;
+    server = server.substring(server.indexOf("=")+1,server.indexOf(";"));
     
+
+  }
+
+  
   
   let dataLinks:DbLink = {}
  
   try {
+    const decodedToken = jwt.verify(token, SECRET_KEY as string) as JwtPayload;
     const adminLinks = await collectionUser.findOne({email:"admin"});
     dataLinks = adminLinks?.dbLinks || {}; 
-    dataLinks[dbName] = {sourceString:!sourceLink ? "" : encrypt(sourceLink), destinationString:!destinationLink ? "" : encrypt(destinationLink) ?? ""}
-    const result = await collectionUser.updateOne(
+    
+    if (!dataLinks[dbTypeName]) {
+      dataLinks[dbTypeName] = {};
+  }
+  if (!dataLinks[dbTypeName][connectionName]) {
+    dataLinks[dbTypeName][connectionName] = {connectionLink:"", server:""};
+  }
+    dataLinks[dbTypeName][connectionName].connectionLink = !connectionLink ? "" : encrypt(connectionLink) ?? "";
+    dataLinks[dbTypeName][connectionName].server = server;
+    
+    
+  const result = await collectionUser.updateOne(
       { email: "admin" }, 
       { $set: { dbLinks: dataLinks } }
     );
@@ -165,14 +194,14 @@ app.get('/checkAdmin',cors(), (req:any, res:any, next) => {
       const decodedToken = jwt.verify(token, SECRET_KEY as string) as JwtPayload;
       const user = await collectionUser.findOne({ _id: decodedToken.userId });
       const histories = await collectionHistory.find({userId:decodedToken.userId});
-      let userData : UserData = {userName:"", databaseNames:[] };
+      let userData : UserData = {userName:"", databaseConnections:{} };
       let userHistory : MigrationHistory[] = []
       if (requestedData.includes("name")) {
         userData.userName = user?.username ?? "";
       }
   
       if (requestedData.includes("databases")) {
-        userData.databaseNames = Object.keys(user?.dbLinks || {}) ?? [];
+        userData.databaseConnections = user?.dbLinks || {} ;
       }
 
       if (requestedData.includes("migrationHistory")) {
@@ -189,18 +218,22 @@ app.get('/checkAdmin',cors(), (req:any, res:any, next) => {
   });
 
   app.get('/database/transfer', cors(), async (req:any, res:any) => {
-    let srcDB = req.query.srcDB;
-    let dstDB = req.query.dstDB;
+    const srcDbTypeName = req.query.srcDbTypeName;
+    const srcConName = req.query.srcConName;
+
+    const dstDbTypeName = req.query.dstDbTypeName;
+    const dstConName = req.query.dstConName;
     
     const token = req.header('Authorization');
 
     try {
       const decodedToken = jwt.verify(token, SECRET_KEY as string) as JwtPayload;
       const user = await collectionUser.findOne({ _id: decodedToken.userId });
-      const source = {connectionString:decrypt(user?.dbLinks[srcDB].sourceString ?? "")}
+      
+      const source = {connectionString:decrypt(user?.dbLinks[srcDbTypeName][srcConName].connectionLink ?? "")}
   
       const started = new Date();
-      const apiSourceUrl = `https://localhost:7118/Database/read${srcDB}`; 
+      const apiSourceUrl = `https://localhost:7118/Database/read${srcDbTypeName}`; 
       const apiSourceResponse = await fetch(apiSourceUrl, {
         method: 'POST',
         headers: {
@@ -213,8 +246,8 @@ app.get('/checkAdmin',cors(), (req:any, res:any, next) => {
         return res.status(500).json({error: "Reading Database Error"})
       }
       else {
-        const destination = {connectionString:decrypt(user?.dbLinks[dstDB].destinationString ?? "")}
-      const apiDestinationUrl = `https://localhost:7118/Database/write${dstDB}`; 
+        const destination = {connectionString:decrypt(user?.dbLinks[dstDbTypeName][dstConName].connectionLink ?? "")}
+      const apiDestinationUrl = `https://localhost:7118/Database/write${dstDbTypeName}`; 
       const apiResponseDestination = await fetch(apiDestinationUrl, {
         method: 'POST',
         headers: {
@@ -231,8 +264,8 @@ app.get('/checkAdmin',cors(), (req:any, res:any, next) => {
         userId:decodedToken.userId,
         startedAt:started,
         endedAt:new Date(),
-        sourceDb:srcDB,
-        destinationDb:dstDB
+        sourceDb:srcDbTypeName,
+        destinationDb:dstDbTypeName
       }
       await collectionHistory.insertMany([migrationHistory]);
       return res.status(200).json({message:"Migration succesful"});
@@ -251,17 +284,17 @@ app.get('/checkAdmin',cors(), (req:any, res:any, next) => {
   app.get('/database/sqlTables', cors(), async (req:any, res:any) => {
 
     const token = req.header('Authorization');
-
+    const connectionName = req.query.connectionName;
     try {
       const decodedToken = jwt.verify(token, SECRET_KEY as string) as JwtPayload;
       const user = await collectionUser.findOne({ _id: decodedToken.userId });
-      const source = {connectionString:decrypt(user?.dbLinks["sql"].sourceString ?? "")}
+      const source = {connectionString:decrypt(user?.dbLinks["sql"][connectionName].connectionLink ?? "")}
       if (source.connectionString == "") {
-        return res.status()
+        return res.status(500)
       }
       const started = new Date();
-      const aspnetApiUrl = `https://localhost:7118/Database/fetchsqltables`; 
-      const aspnetApiResponse = await fetch(aspnetApiUrl, {
+      const apiUrl = `https://localhost:7118/Database/fetchsqltables`; 
+      const apiResponse = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -269,14 +302,14 @@ app.get('/checkAdmin',cors(), (req:any, res:any, next) => {
         body: JSON.stringify(source),
       });
   
-      if (!aspnetApiResponse.ok) {
+      if (!apiResponse.ok) {
         return res.status(500).json({error: "Fetching SQL tables error"})
 
       }
       else {
        
       
-      const responseData = await aspnetApiResponse.json();
+      const responseData = await apiResponse.json();
       
       return res.status(200).send({tables:responseData});
       }
@@ -290,14 +323,20 @@ app.get('/checkAdmin',cors(), (req:any, res:any, next) => {
   app.delete(("/database"), cors(), async (req:any, res:any) => {
     const token = req.header('Authorization');
     const dbName = req.query.dbName;
+    const connectionName = req.query.connectionName;
   
     try {
       const decodedToken = jwt.verify(token, SECRET_KEY as string) as JwtPayload;
       const user = await collectionUser.findOne({ _id: decodedToken.userId });
       let updatedDbLinks = user?.dbLinks;
+      
       if (updatedDbLinks != undefined && updatedDbLinks.hasOwnProperty(dbName)) {
-        delete updatedDbLinks[dbName];
+        delete updatedDbLinks[dbName][connectionName];
+        if (Object.keys(updatedDbLinks[dbName]).length < 1) {
+          delete updatedDbLinks[dbName];
+        }
       }
+    
       const result = await collectionUser.updateOne(
         { _id: decodedToken.userId }, 
         { $set: { dbLinks: updatedDbLinks } }

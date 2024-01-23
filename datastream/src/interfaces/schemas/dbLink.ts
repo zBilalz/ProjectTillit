@@ -1,6 +1,8 @@
 
 export default interface DbLink {
-    [key: string]: { sourceString: string | undefined; destinationString: string } 
+    [dbTypeName: string]: {
+        [connectionName: string]: {connectionLink:string, server:string};
+    };
 }
 
-export {}
+;

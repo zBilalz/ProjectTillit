@@ -7,14 +7,15 @@ import { Circles } from 'react-loader-spinner';
 import LoadingSpinner from '../../components/Indicators/loadingSpinner';
 import CheckMark from '../../components/Indicators/checkMark';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleCheck, faTrash, faEdit } from '@fortawesome/free-solid-svg-icons'
+import { faCircleCheck, faTrash, faEdit, faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import ServerErrorModal from '../../components/Modals/serverErrorModal';
+import DbLink from '../../interfaces/schemas/dbLink';
 
 
 interface RenderModalProps {
     
     setErrorServer:React.Dispatch<React.SetStateAction<boolean>>,
-    dbNames:string[],
+    databaseConnections:DbLink,
     addDb:boolean,
     isModalOpen: boolean,
     setModalOpen:React.Dispatch<React.SetStateAction<boolean>>,
@@ -62,11 +63,14 @@ const RenderDeleteDatabaseConnection = ({setModalOpen,onDeleteConfirmed}: {setMo
   );
 };
 
-const RenderViewDatabases = ({dbNames,setModalOpen}: {dbNames: string[],
+
+
+const RenderViewDatabases = ({databaseConnections,setModalOpen}: {databaseConnections: DbLink,
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>}) => {
 
   const [deleteConfirmationModalOpen, setDeleteConfirmationModalOpen] = useState(false);
-  const [selectedDb, setSelectedDb] = useState("");
+  const [selectedConnection, setSelectedConnection] = useState<{dbName:string, connectionName:string}>({dbName:"", connectionName:""});
+  
 
   const openDeleteConfirmationModal = () => {
     setDeleteConfirmationModalOpen(true);
@@ -79,10 +83,10 @@ const RenderViewDatabases = ({dbNames,setModalOpen}: {dbNames: string[],
   const onDeleteConfirmed = async () => {
       const token = localStorage.getItem("token");
       try {
-        const response = await axios.delete(`http://localhost:8000/database?dbName=${selectedDb}`, {
+        const response = await axios.delete(`http://localhost:8000/database?dbName=${selectedConnection.dbName}&connectionName=${selectedConnection.connectionName}`, {
           headers: { Authorization: token}
         });
-        console.log(response.status);
+     
         
         if (response.status == 200) {
           window.location.reload();
@@ -93,27 +97,43 @@ const RenderViewDatabases = ({dbNames,setModalOpen}: {dbNames: string[],
       }
     closeDeleteConfirmationModal();
   };
+  
 
   return (
     <Modal closeModal={() => setModalOpen(false)}>
       <div className={styles.accountModalDatabaseList}>
-        <h2>Database connected to</h2>
-        {dbNames.length < 1 ? 
+        <h2>Servers connected to</h2>
+        {Object.keys(databaseConnections).length < 1 ? 
           <p>No databases connected to this account.</p>:
           <ul>
-            {dbNames.map((dbName,index) => (
-              <div style={{ display: 'flex',flexDirection: 'row',alignContent: 'center',justifyContent: 'center'}}>
-                <li key={dbName}>{dbName}
+            {Object.keys(databaseConnections).map((dbName,index) => (
+              <div style={{ display: 'flex',flexDirection: 'column',alignContent: 'center',justifyContent: 'center'}}>
+                <li key={dbName}>{dbName} ({Object.keys(databaseConnections[dbName]).length})
                   <span style={{ fontSize: 26 }}>
                     <FontAwesomeIcon style={{ color: 'green' }} icon={faCircleCheck} />
                   </span>
                 </li>
+                <div style={{width:"90%", marginLeft:25}}>
+                  {Object.keys(databaseConnections[dbName]).map((connectionName, index) =>{return (
+                    <>
+                    <div style={{display:"flex", flexDirection:"row"}}>
+                    <span key={index.toString() + "_edit"} style={{fontSize: 26,margin: '15px 0 0 0',cursor: 'pointer',}}>
+                  <FontAwesomeIcon style={{ color: 'black' }} icon={faArrowRight} />
+                </span><li>{connectionName} (server:{databaseConnections[dbName][connectionName].server})</li>
                 <span key={index.toString() + "_delete"} style={{fontSize: 26,margin: '15px 0 0 5px',cursor: 'pointer',}}>
-                  <FontAwesomeIcon style={{ color: 'black' }} icon={faTrash} onClick={() => {openDeleteConfirmationModal(); setSelectedDb(dbName)} }/>
+                  <FontAwesomeIcon style={{ color: 'black' }} icon={faTrash} onClick={() => {openDeleteConfirmationModal(); setSelectedConnection({dbName:dbName, connectionName:connectionName})} }/>
                 </span>
                 <span key={index.toString() + "_edit"} style={{fontSize: 26,margin: '15px 0 0 15px',cursor: 'pointer',}}>
                   <FontAwesomeIcon style={{ color: 'black' }} icon={faEdit} />
                 </span>
+                    </div>
+                    
+                    </>
+                  
+                 )})}
+                 
+                </div>
+                
               </div>
             ))}
           </ul>
@@ -131,22 +151,26 @@ const RenderViewDatabases = ({dbNames,setModalOpen}: {dbNames: string[],
 
 const RenderAddDatabaseModal = ({setErrorServer, setModalOpen} :RenderAddDatabaseModal) => {
 
-    const [sourceLink, setSourceLink] = useState("");
-    const [destinationLink, setDestinationLink] = useState("");
-    const [dbName, setDbName] = useState("");
+    const [connectionLink, setConnectionLink] = useState("");
+    const [dbTypeName, setDbTypeName] = useState("");
+    const [connectionName, setConnectionName] = useState("");
     const [isEmpty, setIsEmpty] = useState(false);
+    const token = localStorage.getItem("token");
 
     const submit = async(e: any) => {
         e.preventDefault();
         setIsEmpty(false);
-        if (dbName && sourceLink || dbName && destinationLink) {
+        if (connectionLink && dbTypeName && connectionName) {
             
           try {
-            const response = await axios.post("http://localhost:8000/updateDbLinks", {
-                dbName,
-                sourceLink,
-                destinationLink,
-            });
+            const response = await axios.post("http://localhost:8000/updateDbLinks",{
+            
+            connectionName,
+            dbTypeName,
+            connectionLink,
+          }, {
+              headers: { Authorization: token },
+            },);
       
             if (response.status == 200) {
          
@@ -172,32 +196,32 @@ const RenderAddDatabaseModal = ({setErrorServer, setModalOpen} :RenderAddDatabas
 
     return ( <Modal closeModal={() => setModalOpen(false)}>
     <div className={styles.accountModalChildItems}>
-      <h2>Add a Database</h2>
+      <h2>Add a Database connection</h2>
       <label>
-        Database Name:
+        Name Connection:
         <input
           type="text"
-          value={dbName}
-          onChange={(e) => setDbName(e.target.value.toLowerCase())}
+          value={connectionName}
+          onChange={(e) => setConnectionName(e.target.value.toLowerCase())}
         />
       </label>
       <label>
-        Source Link:
+        Database Type:
         <input
           type="text"
-          value={sourceLink}
-          onChange={(e) => setSourceLink(e.target.value)}
+          value={dbTypeName}
+          onChange={(e) => setDbTypeName(e.target.value.toLowerCase())}
         />
       </label>
       <label>
-        Destination Link:
+        Connection link:
         <input
           type="text"
-          value={destinationLink}
-          onChange={(e) => setDestinationLink(e.target.value)}
+          value={connectionLink}
+          onChange={(e) => setConnectionLink(e.target.value)}
         />
       </label>
-      {isEmpty ? <p style={{color:"red"}}>Source and Destination links cannot be both empty.</p>:""}
+      {isEmpty ? <p style={{color:"red"}}>Some fields are empty.</p>:""}
       <button className={styles.updateBtn} onClick={(e) => submit(e)}>
         Update
       </button>
@@ -205,13 +229,13 @@ const RenderAddDatabaseModal = ({setErrorServer, setModalOpen} :RenderAddDatabas
   </Modal>)
 }
 
-const RenderModal = ({setErrorServer, addDb, dbNames, isModalOpen, setModalOpen} :RenderModalProps) => {
+const RenderModal = ({setErrorServer, addDb, databaseConnections, isModalOpen, setModalOpen} :RenderModalProps) => {
 
 
     return (
         <>
         
-        {!isModalOpen ? "" : addDb ? <RenderAddDatabaseModal setErrorServer={setErrorServer} setModalOpen={setModalOpen}  /> : <RenderViewDatabases setModalOpen={setModalOpen} dbNames={dbNames} />}
+        {!isModalOpen ? "" : addDb ? <RenderAddDatabaseModal setErrorServer={setErrorServer} setModalOpen={setModalOpen}  /> : <RenderViewDatabases setModalOpen={setModalOpen} databaseConnections={databaseConnections} />}
      
     
     </>
@@ -227,7 +251,7 @@ const MyAccount = () => {
   const [errorServer, setErrorServer] = useState(false);
   const [userData, setUserData] = useState({
     userName: '',
-    databaseNames: [],
+    databaseConnections: {},
   });
   
   
@@ -240,7 +264,7 @@ const MyAccount = () => {
           headers: { Authorization: token}, 
           params: { requests: ["name", "databases"] },
         });
-
+        
         setUserData(response.data);
       } catch (error) {
         setErrorServer(true);
@@ -270,20 +294,20 @@ const MyAccount = () => {
               <span>{userData.userName == "admin" ? "admin" : "user"}</span>
             </div>
             <div className={styles.accountDetailItem}>
-              <span className={styles.accountLabel}>Connected to Databases:</span>
-              <span>{userData.databaseNames.length}</span>
+              <span className={styles.accountLabel}>Connected to servers:</span>
+              <span>{Object.keys(userData.databaseConnections).length}</span>
             </div>
            
           </div>
         </div>
         <button className={styles.addDatabaseBtn} onClick={() => {setModalOpen(true); setAddDb(false)}}>
-          View Databases
+          View Database connections
         </button>
         <button className={styles.addDatabaseBtn} onClick={() => {setModalOpen(true); setAddDb(true)}}>
-          Add a Database
+          Add a Database connection
         </button>
       </div>
-      <RenderModal setErrorServer={setErrorServer} dbNames={userData.databaseNames} addDb={addDb} isModalOpen={isModalOpen} setModalOpen={setModalOpen}  />
+      <RenderModal setErrorServer={setErrorServer} databaseConnections={userData.databaseConnections} addDb={addDb} isModalOpen={isModalOpen} setModalOpen={setModalOpen}  />
       </>
   }
       {errorServer ? <ServerErrorModal errorServer={errorServer} closeModal={closeServerErrorModal} /> : ""}

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "cAZWb/mhG5Y9dJ5WleMV4EVdr9yfRSVzeLxrYK0JBaVaO+QqI0ulBdSPG1vDgarFdlQssIzCtbeRRRYMiyprEQ==",
+  "dgSpecHash": "bc/BmdjYVdii3PAMy3DvsbYCx7fUmU/A3P5FmZnaYbtgKjDPf6M6qN8tDEuxnTA3y99ySIodVsNqMV7ciewsxg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\bilal\\Desktop\\DatashiftAPI_3\\DatashiftAPI\\DatashiftAPI\\DatashiftAPI.csproj",
+  "projectFilePath": "C:\\Users\\bilal\\Desktop\\Project_3\\ProjectTillit\\Api\\DatashiftAPI\\DatashiftAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\bilal\\.nuget\\packages\\awssdk.core\\3.7.100.14\\awssdk.core.3.7.100.14.nupkg.sha512",
     "C:\\Users\\bilal\\.nuget\\packages\\awssdk.securitytoken\\3.7.100.14\\awssdk.securitytoken.3.7.100.14.nupkg.sha512",

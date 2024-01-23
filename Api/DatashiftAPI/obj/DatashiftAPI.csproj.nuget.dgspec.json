@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\bilal\\Desktop\\DatashiftAPI_3\\DatashiftAPI\\DatashiftAPI\\DatashiftAPI.csproj": {}
+    "C:\\Users\\bilal\\Desktop\\Project_3\\ProjectTillit\\Api\\DatashiftAPI\\DatashiftAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\bilal\\Desktop\\DatashiftAPI_3\\DatashiftAPI\\DatashiftAPI\\DatashiftAPI.csproj": {
+    "C:\\Users\\bilal\\Desktop\\Project_3\\ProjectTillit\\Api\\DatashiftAPI\\DatashiftAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\bilal\\Desktop\\DatashiftAPI_3\\DatashiftAPI\\DatashiftAPI\\DatashiftAPI.csproj",
+        "projectUniqueName": "C:\\Users\\bilal\\Desktop\\Project_3\\ProjectTillit\\Api\\DatashiftAPI\\DatashiftAPI.csproj",
         "projectName": "DatashiftAPI",
-        "projectPath": "C:\\Users\\bilal\\Desktop\\DatashiftAPI_3\\DatashiftAPI\\DatashiftAPI\\DatashiftAPI.csproj",
+        "projectPath": "C:\\Users\\bilal\\Desktop\\Project_3\\ProjectTillit\\Api\\DatashiftAPI\\DatashiftAPI.csproj",
         "packagesPath": "C:\\Users\\bilal\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\bilal\\Desktop\\DatashiftAPI_3\\DatashiftAPI\\DatashiftAPI\\obj\\",
+        "outputPath": "C:\\Users\\bilal\\Desktop\\Project_3\\ProjectTillit\\Api\\DatashiftAPI\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\bilal\\AppData\\Roaming\\NuGet\\NuGet.Config",
