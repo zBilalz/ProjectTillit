@@ -249,11 +249,10 @@ const MyAccount = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [addDb, setAddDb] = useState(false);
   const [errorServer, setErrorServer] = useState(false);
-  const [userData, setUserData] = useState({
+  const [userData, setUserData] = useState<{userName:string,databaseConnections:DbLink}>({
     userName: '',
     databaseConnections: {},
   });
-  
   
   const token = localStorage.getItem("token");
   
@@ -266,6 +265,10 @@ const MyAccount = () => {
         });
         
         setUserData(response.data);
+      
+     
+      
+        
       } catch (error) {
         setErrorServer(true);
       }
@@ -278,6 +281,23 @@ const MyAccount = () => {
   const closeServerErrorModal = () => {
     setErrorServer(false);
   };
+
+  const calculateServers = ():number => {
+    let totalKeys = 0;
+    if (Object.keys(userData.databaseConnections).length > 0) {
+      for (const dbTypeName in userData.databaseConnections) {
+        if (userData.databaseConnections.hasOwnProperty(dbTypeName)) {
+          for (const connectionName in userData.databaseConnections[dbTypeName]) {
+            if (userData.databaseConnections[dbTypeName].hasOwnProperty(connectionName)) {
+              totalKeys++;
+            }
+          }
+        }
+      }
+     
+    }
+    return totalKeys
+  }
 
   return (
     <>
@@ -295,7 +315,7 @@ const MyAccount = () => {
             </div>
             <div className={styles.accountDetailItem}>
               <span className={styles.accountLabel}>Connected to servers:</span>
-              <span>{Object.keys(userData.databaseConnections).length}</span>
+              <span>{Object.keys(userData.databaseConnections).length < 1? 0 : calculateServers()}</span>
             </div>
            
           </div>
